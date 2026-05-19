@@ -1,0 +1,14 @@
+name: vo_thesis
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - numpy
+  - pip
+  - pip:
+    - torch==2.6.0+cu124 --index-url https://download.pytorch.org/whl/cu124
+    - torchvision==0.21.0+cu124 --index-url https://download.pytorch.org/whl/cu124
+    - opencv-python==4.10.0.84
