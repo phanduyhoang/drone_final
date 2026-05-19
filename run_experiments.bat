@@ -6,7 +6,8 @@ echo ===============================================
 set PYTHON=python
 set METHODS=methods
 set TRAJ=square_loop_400steps_10px_smooth.json
-set LOOPS=20
+set LOOPS=70
+set LOOPS_SNOW=20
 
 rem === Images ===
 set IMG_TERRAIN=images\corner_crop_terrain.tif
@@ -18,6 +19,7 @@ rem === IMPORTANT: --cam-sign 1 --yaw-use prev skips auto-calibration entirely.
 rem     This is required for reliable results on all images.
 rem     The trajectory auto-scales to whatever image size you load.
 set SHARED=--cam-sign 1 --yaw-use prev --loops %LOOPS%
+set SHARED_SNOW=--cam-sign 1 --yaw-use prev --loops %LOOPS_SNOW%
 
 rem === Make sure results folder exists ===
 if not exist results mkdir results
@@ -41,7 +43,8 @@ echo [1/6] VO-only on Terrain (Corner crop)...
 %PYTHON% %METHODS%\superpoint_simulation_aerial_vo_only_from_trajectory.py ^
   --image %IMG_TERRAIN% --trajectory %TRAJ% %SHARED% ^
   --cx 0.4 --cy 0.3 ^
-  --save-traj-map results\terrain_vo_map.png --save-gt-overlay results\terrain_vo_overlay.png
+  --save-traj-map results\terrain_vo_map.png --save-gt-overlay results\terrain_vo_overlay.png ^
+  --save-metrics results\terrain_vo_metrics.json
 echo Done.
 
 echo.
@@ -49,35 +52,40 @@ echo [2/6] VO+LC on Terrain (Corner crop)...
 %PYTHON% %METHODS%\superpoint_simulation_aerial_with_loopclosure_posegraph_from_trajectory.py ^
   --image %IMG_TERRAIN% --trajectory %TRAJ% %SHARED% ^
   --cx 0.4 --cy 0.3 ^
-  --save-traj-map results\terrain_lc_map.png --save-gt-overlay results\terrain_lc_overlay.png
+  --save-traj-map results\terrain_lc_map.png --save-gt-overlay results\terrain_lc_overlay.png ^
+  --save-metrics results\terrain_lc_metrics.json
 echo Done.
 
 echo.
-echo [3/6] VO-only on Snow image...
+echo [3/6] VO-only on Snow image (challenge case)...
 %PYTHON% %METHODS%\superpoint_simulation_aerial_vo_only_from_trajectory.py ^
-  --image %IMG_SNOW% --trajectory %TRAJ% %SHARED% %SNOW_EXTRA% ^
-  --save-traj-map results\snow_vo_map.png --save-gt-overlay results\snow_vo_overlay.png
+  --image %IMG_SNOW% --trajectory %TRAJ% %SHARED_SNOW% %SNOW_EXTRA% ^
+  --save-traj-map results\snow_vo_map.png --save-gt-overlay results\snow_vo_overlay.png ^
+  --save-metrics results\snow_vo_metrics.json
 echo Done.
 
 echo.
-echo [4/6] VO+LC on Snow image...
+echo [4/6] VO+LC on Snow image (challenge case)...
 %PYTHON% %METHODS%\superpoint_simulation_aerial_with_loopclosure_posegraph_from_trajectory.py ^
-  --image %IMG_SNOW% --trajectory %TRAJ% %SHARED% %SNOW_EXTRA% ^
-  --save-traj-map results\snow_lc_map.png --save-gt-overlay results\snow_lc_overlay.png
+  --image %IMG_SNOW% --trajectory %TRAJ% %SHARED_SNOW% %SNOW_EXTRA% ^
+  --save-traj-map results\snow_lc_map.png --save-gt-overlay results\snow_lc_overlay.png ^
+  --save-metrics results\snow_lc_metrics.json
 echo Done.
 
 echo.
 echo [5/6] VO-only on Summer City...
 %PYTHON% %METHODS%\superpoint_simulation_aerial_vo_only_from_trajectory.py ^
   --image %IMG_CITY% --trajectory %TRAJ% %SHARED% ^
-  --save-traj-map results\city_vo_map.png --save-gt-overlay results\city_vo_overlay.png
+  --save-traj-map results\city_vo_map.png --save-gt-overlay results\city_vo_overlay.png ^
+  --save-metrics results\city_vo_metrics.json
 echo Done.
 
 echo.
 echo [6/6] VO+LC on Summer City...
 %PYTHON% %METHODS%\superpoint_simulation_aerial_with_loopclosure_posegraph_from_trajectory.py ^
   --image %IMG_CITY% --trajectory %TRAJ% %SHARED% ^
-  --save-traj-map results\city_lc_map.png --save-gt-overlay results\city_lc_overlay.png
+  --save-traj-map results\city_lc_map.png --save-gt-overlay results\city_lc_overlay.png ^
+  --save-metrics results\city_lc_metrics.json
 echo Done.
 
 echo.

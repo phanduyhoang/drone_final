@@ -354,6 +354,8 @@ def main():
 
     ap.add_argument("--save-traj-map", type=str, default=None)
     ap.add_argument("--save-gt-overlay", type=str, default=None)
+    ap.add_argument("--save-metrics", type=str, default=None,
+                    help="Path to save JSON metrics (e.g. results/terrain_lc_metrics.json)")
 
     args = ap.parse_args()
 
@@ -589,6 +591,26 @@ def main():
 
     # Print metrics
     metrics.print_metrics()
+
+    # Save metrics JSON
+    if args.save_metrics:
+        stats = metrics.get_statistics()
+        data = {
+            "mode": "VO+LC",
+            "image": os.path.basename(args.image),
+            "loops": args.loops,
+            "total_frames": metrics.frame_count,
+            "ATE_px": round(stats["ate"], 2),
+            "RPE_px": round(stats["rpe"], 2),
+            "mean_translation_error_px": round(stats["mean_translation_error"], 2),
+            "max_translation_error_px": round(stats["max_translation_error"], 2),
+            "mean_features": round(stats["mean_feature_count"], 1),
+            "mean_inlier_ratio_pct": round(stats["mean_inlier_ratio"] * 100, 2),
+        }
+        os.makedirs(os.path.dirname(os.path.abspath(args.save_metrics)), exist_ok=True)
+        with open(args.save_metrics, "w") as _f:
+            json.dump(data, _f, indent=2)
+        print(f"[SAVED] metrics -> {args.save_metrics}")
 
     # Save map (dark canvas with GT red + EST green)
     # Canvas is centered on the GT trajectory bounding box so the map always
