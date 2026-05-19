@@ -40,6 +40,7 @@ echo.
 echo [1/6] VO-only on Terrain (Corner crop)...
 %PYTHON% %METHODS%\superpoint_simulation_aerial_vo_only_from_trajectory.py ^
   --image %IMG_TERRAIN% --trajectory %TRAJ% %SHARED% ^
+  --cx 0.5 --cy 0.5 ^
   --save-traj-map results\terrain_vo_map.png --save-gt-overlay results\terrain_vo_overlay.png
 echo Done.
 
@@ -47,6 +48,7 @@ echo.
 echo [2/6] VO+LC on Terrain (Corner crop)...
 %PYTHON% %METHODS%\superpoint_simulation_aerial_with_loopclosure_posegraph_from_trajectory.py ^
   --image %IMG_TERRAIN% --trajectory %TRAJ% %SHARED% ^
+  --cx 0.5 --cy 0.5 ^
   --save-traj-map results\terrain_lc_map.png --save-gt-overlay results\terrain_lc_overlay.png
 echo Done.
 

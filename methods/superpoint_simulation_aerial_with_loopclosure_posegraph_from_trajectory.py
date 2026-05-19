@@ -590,28 +590,37 @@ def main():
     # Print metrics
     metrics.print_metrics()
 
-    # Save map (simple dark canvas with GT red + EST green)
+    # Save map (dark canvas with GT red + EST green)
+    # Canvas is centered on the GT trajectory bounding box so the map always
+    # looks correct regardless of where in the image the trajectory sits.
     if args.save_traj_map:
         map_size = 900
         canvas = np.zeros((map_size, map_size, 3), dtype=np.uint8)
         canvas[:] = (40, 40, 40)
-        scale = map_size / float(max(H, W))
+
+        # Center and scale based on GT bounding box (75% of canvas = GT square)
+        gt_xs = [p[0] for p in gt_xy_list]
+        gt_ys = [p[1] for p in gt_xy_list]
+        traj_cx_map = (min(gt_xs) + max(gt_xs)) / 2.0
+        traj_cy_map = (min(gt_ys) + max(gt_ys)) / 2.0
+        traj_span = max(max(gt_xs) - min(gt_xs), max(gt_ys) - min(gt_ys), 1.0)
+        scale = (map_size * 0.75) / traj_span
         cx, cy = map_size // 2, map_size // 2
 
         # draw GT
         for i in range(1, len(gt_xy_list)):
             x0, y0 = gt_xy_list[i-1]
             x1, y1 = gt_xy_list[i]
-            p0 = (int(cx + (x0 - W/2) * scale), int(cy + (y0 - H/2) * scale))
-            p1 = (int(cx + (x1 - W/2) * scale), int(cy + (y1 - H/2) * scale))
+            p0 = (int(cx + (x0 - traj_cx_map) * scale), int(cy + (y0 - traj_cy_map) * scale))
+            p1 = (int(cx + (x1 - traj_cx_map) * scale), int(cy + (y1 - traj_cy_map) * scale))
             cv2.line(canvas, p0, p1, (0, 0, 255), 2)
 
         # draw EST
         for i in range(1, len(est_xy_list)):
             x0, y0 = est_xy_list[i-1]
             x1, y1 = est_xy_list[i]
-            p0 = (int(cx + (x0 - W/2) * scale), int(cy + (y0 - H/2) * scale))
-            p1 = (int(cx + (x1 - W/2) * scale), int(cy + (y1 - H/2) * scale))
+            p0 = (int(cx + (x0 - traj_cx_map) * scale), int(cy + (y0 - traj_cy_map) * scale))
+            p1 = (int(cx + (x1 - traj_cx_map) * scale), int(cy + (y1 - traj_cy_map) * scale))
             cv2.line(canvas, p0, p1, (0, 255, 0), 2)
 
         cv2.imwrite(args.save_traj_map, canvas)
