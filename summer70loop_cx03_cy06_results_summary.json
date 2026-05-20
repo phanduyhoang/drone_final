@@ -1,0 +1,28 @@
+{
+  "image": "summer_city_crop.tif",
+  "setup": {
+    "loops": 70,
+    "cam_sign": 1,
+    "yaw_use": "prev",
+    "cx": 0.3,
+    "cy": 0.6
+  },
+  "vo_only": {
+    "ATE_px": 450.9,
+    "RPE_px": 0.1,
+    "mean_translation_error_px": 391.38,
+    "max_translation_error_px": 779.67,
+    "mean_features": 185.8,
+    "mean_inlier_ratio_pct": 91.89,
+    "total_frames": 113540
+  },
+  "vo_lc": {
+    "ATE_px": 75.22,
+    "RPE_px": 6.89,
+    "mean_translation_error_px": 63.77,
+    "max_translation_error_px": 231.62,
+    "mean_features": 185.8,
+    "mean_inlier_ratio_pct": 91.89,
+    "total_frames": 113540
+  }
+}

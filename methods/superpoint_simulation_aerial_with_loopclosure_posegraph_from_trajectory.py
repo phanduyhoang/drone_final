@@ -598,14 +598,14 @@ def main():
         data = {
             "mode": "VO+LC",
             "image": os.path.basename(args.image),
-            "loops": args.loops,
-            "total_frames": metrics.frame_count,
-            "ATE_px": round(stats["ate"], 2),
-            "RPE_px": round(stats["rpe"], 2),
-            "mean_translation_error_px": round(stats["mean_translation_error"], 2),
-            "max_translation_error_px": round(stats["max_translation_error"], 2),
-            "mean_features": round(stats["mean_feature_count"], 1),
-            "mean_inlier_ratio_pct": round(stats["mean_inlier_ratio"] * 100, 2),
+            "loops": int(args.loops),
+            "total_frames": int(metrics.frame_count),
+            "ATE_px": float(round(float(stats["ate"]), 2)),
+            "RPE_px": float(round(float(stats["rpe"]), 2)),
+            "mean_translation_error_px": float(round(float(stats["mean_translation_error"]), 2)),
+            "max_translation_error_px": float(round(float(stats["max_translation_error"]), 2)),
+            "mean_features": float(round(float(stats["mean_feature_count"]), 1)),
+            "mean_inlier_ratio_pct": float(round(float(stats["mean_inlier_ratio"]) * 100.0, 2)),
         }
         os.makedirs(os.path.dirname(os.path.abspath(args.save_metrics)), exist_ok=True)
         with open(args.save_metrics, "w") as _f:
